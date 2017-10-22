@@ -264,7 +264,9 @@ class Environment(object):
             Receive a reward for the agent based on traffic laws. """
 
         assert agent in self.agent_states, "Unknown agent!"
-        assert action in self.valid_actions, "Invalid action!"
+        if action not in self.valid_actions:
+            raise ValueError("Action {0} is not valid".format(action))
+        # assert action in self.valid_actions, "Invalid action!"
 
         state = self.agent_states[agent]
         location = state['location']
