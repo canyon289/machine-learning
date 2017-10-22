@@ -50,7 +50,12 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
         else:
-            self.epsilon = self.epsilon - 0.05
+            self.t +=1
+            # self.epsilon = self.epsilon - 0.05
+            # self.epsilon = 1/self.t**2
+            # self.epsilon = np.cos(self.alpha * self.t)
+            self.epsilon, self.alpha = self.epsilon - .001, 1
+
         return None
 
     def build_state(self):
@@ -207,7 +212,7 @@ def run():
     #   display      - set to False to disable the GUI if PyGame is enabled
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
-    sim = Simulator(env, update_delay=.0001, log_metrics=True, display=False)
+    sim = Simulator(env, update_delay=.0001, log_metrics=True, display=False, optimized=True)
     
     ##############
     # Run the simulator
