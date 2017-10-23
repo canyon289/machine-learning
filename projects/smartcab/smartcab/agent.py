@@ -1,11 +1,8 @@
 import random
-import math
 from environment import Agent, Environment
 from planner import RoutePlanner
 from simulator import Simulator
 import numpy as np
-import pygame
-import ipdb
 from collections import defaultdict
 
 

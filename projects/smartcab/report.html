@@ -11882,7 +11882,7 @@ div#notebook {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong>
-The smartcab does not move at all during the simulation. It's getting a constant reward of -5.96 in my simulation since it is idling at a green light. The light is not changing, likely because there is an error message saying the Agent state is not updating.</p>
+The smartcab does not move at all during the simulation. It's getting a constant reward of -5.96 when the light is green. When the light turns red it starts receiving positive rewards, but then the light turns green and it starts receiving negative rewards. This cycle just continues ad inifinitum.</p>
 
 </div>
 </div>
@@ -11917,6 +11917,8 @@ The smartcab does not move at all during the simulation. It's getting a constant
 <p><strong>Answer:</strong>
 Three flags that can be set are learning, epsilon, and alpha. The learning flag just indicates whether the cab is updating its policy, or Q function. The epsilon value is used in epsilon greedy and encourages the learning to take risks, to potentially learn of new more valuable actions. This is the same as the Multi Armed Bandit problem, where a bandet could stick with one "slot machine" and get a learned reward, or randomly risk trying others to see if there's greater reward.</p>
 <p>The alpha is the learning rate and essentially is a coeffcient on a term that updates the the Q(s,a) output.</p>
+<p>The method act is called when the agent performed an action. The render_text and render methods are different ways of displaying outputs to the user. The render_text prints information to the console, while the render method is used with Pygame to visually display the state of the simulation.</p>
+<p>According to line 38 in the planner.py pytho file the East West direction will be considered first.</p>
 
 </div>
 </div>
@@ -13074,7 +13076,7 @@ SUVORK5CYII=
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong>
 The agent is making bad decisions around 45% of the time according to the top left graph. The rate of reliability does make sense as the agent can only fumble into the correct goal, I'm personally surprised that it is able to reach the 20% rate that it has achieved.</p>
-<p>The rewards of the cab are around -6 and it does suggest that the agent is unable to reach a positive reward state, or even trend towards zero. As the  trials go on the agent as expected makes no improvement. This cab is definitely not safe or reliable for passengers, the score calculation clearly shows it score an F in both categories.</p>
+<p>The rewards of the cab are average around -6 and it does suggest that the agent is unable to reach a positive reward state, or even trend towards zero. As the  trials go on the agent as expected makes no improvement. This cab is definitely not safe or reliable for passengers, the score calculation clearly shows it score an F in both categories.</p>
 
 </div>
 </div>
@@ -13159,10 +13161,8 @@ The features I believe to be most important for efficiency are waypoint. These t
 The state space I have is</p>
 <ul>
 <li>2 Light Colors (Red, Green)</li>
-<li>4 Right Car actions (None, Forward, Left Turn, Right Turn) </li>
 <li>4 Left Car actions (None, Forward, Left Turn, Right Turn) </li>
 <li>4 Oncoming Car actions (None, Forward, Left Turn, Right Turn)</li>
-<li>4 Agent actions (None, Forward, Left Turn, Right Turn) </li>
 <li>3 Waypoints (Left, Right, Forward)</li>
 </ul>
 
@@ -13171,11 +13171,11 @@ The state space I have is</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[43]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
-<span class="n">states</span> <span class="o">=</span> <span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">states</span> <span class="o">=</span> <span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
 <span class="n">num_states</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">states</span><span class="p">)))</span>
 <span class="k">print</span><span class="p">(</span><span class="n">num_states</span><span class="p">)</span>
 </pre></div>
@@ -13194,7 +13194,7 @@ The state space I have is</p>
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>1536
+<pre>288
 </pre>
 </div>
 </div>
@@ -13207,7 +13207,8 @@ The state space I have is</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The number of states possible is 1536 given the features I picked</p>
+<p>The number of states possible is 1536 given the features I picked. I believe the agent culd learn the policy for each possible staet within a reasonable number of trials, as the computer I'm using can run though hundreds of states a second, so within a minute could easily exerience every state possible.</p>
+<p>I decided to leave the right car out based on my knowledge of traffic rules. I believe that the right car will not cause an accident if I learn the correct policy of stopping at a red light. This is because the right car will either turn left, or go straight if we assume it is following traffic laws.</p>
 
 </div>
 </div>
@@ -14542,7 +14543,8 @@ gg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong>
-This agent seems to be learning over time. As the trial number increases from the number of total bad actions are decreasing, with the exception of major accident which seems to be staying about the same. The rolling avreage reward per action however is going up and the trial number is going up as well. Unfortunately however the safety and reliability rating are still extremely poor, at B rating for reliability and an F rating for safety.</p>
+This agent seems to be learning over time. As the trial number increases from the number of total bad actions are decreasing, with the exception of minor accident which seems to be staying about the same. The rolling avreage reward per action however is going up and the trial number is going up as well. Unfortunately however the safety and reliability rating are still extremely poor, at C rating for reliability and an F rating for safety.
+The decaying function is accurately represnted as it is linearly decreasing as the trial number goes on. As the number of training trials increased the number of bad actions did decrease as expected.</p>
 
 </div>
 </div>
@@ -19687,7 +19689,7 @@ In my agent I believe the optimal policy if waiting at a red light should be tak
  -- right : 0.00
  -- None : 0.00
  -- left : 0.00</code></pre>
-<p>One case where my cab did not find any policy is the one above. In this example the light is green, the oncoming car is moving forward, and the car on the left is taking a left turn. If we assume the dummy agents are good drivers, this state will never occur because the car on the left would never take a left turn on a red light. This is reflected in the Q,A table because as the agent never saw this state, and subsequently never updated the values.</p>
+<p>One case where my cab did not find any policy is the one above. In this example the light is green, the oncoming car is intending to move forward, and the car on the left is intending to take a left turn. If we assume the dummy agents are good drivers, this state will never occur because the car on the left would never take a left turn on a red light. This is reflected in the Q,A table because as the agent never saw this state, and subsequently never updated the values.</p>
 
 </div>
 </div>
@@ -19716,9 +19718,7 @@ In my agent I believe the optimal policy if waiting at a red light should be tak
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p><strong>Reviewer, please give me strong feedback on this one, I want to ensure I understand</strong>
-From the environment I believe we could not use future rewards because the next state could be random. So for example if I was in a state and I believed the oncoming car would be going forward, this was not necessarily true, the oncoming car could actually do nothing. Because of this stochasticity in the environment future rewards could actually muddle the rewards of the current state.</p>
-<p>In the cab I believe it couldn't use future rewards because the cab would optimize towards just getting into different states that provide rewards. Difficult to word this but I think the cab would be disincentivized to reach the goal, we would instead reward it to just get into more states so it could keep collecting rewards for getting closer to the waypoint.</p>
+<p>In the cab I believe it couldn't use future rewards because the cab would optimize towards just getting into different states that provide rewards. Difficult to word this but I think the cab would be disincentivized to reach the goal, we would instead reward it to just get into more states so it could keep collecting rewards for getting closer to the waypoint. If we were to include a distance measure in the st</p>
 <p>I also believe one last factor is that the way point can move. I think future rewards works in the examples in some examples, where the start point and goal state are in fixed places. This way we can incentivize the agent to take a certain path, but in this case it seems that the start point and end point are not fixed so reward the agent for getting into a random state is not helpful.</p>
 
 </div>
